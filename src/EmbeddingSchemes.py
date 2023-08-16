@@ -59,9 +59,13 @@ def get_embedding(seq_ls: list, emb_dict: dict):
     emb_arr = np.stack(emb_arr)
     return emb_arr
 
+
+
+
+
 ### DEBUGGING 
 
 input_tokens = [["A", "Bpa", "-"], ["A", "N", "-"]]
-ohe_dict = get_st_score_dict()
-encoded_tokens = get_embedding(input_tokens, ohe_dict)
-print(encoded_tokens)
+st_dict = get_st_score_dict()
+encoded_tokens = get_embedding(input_tokens, st_dict)
+# np.save("./data/hsa1_stscores.npy", encoded_tokens)
