@@ -24,7 +24,7 @@ def get_ohe_dict():
 
 # ST Scores dictionary
 def get_st_score_dict():
-    st_scores = pd.read_csv("/Users/u5802006/Library/CloudStorage/GoogleDrive-dana.matthews@outlook.com.au/My Drive/2023_Venomous_peptides/GitHubRepo/PeptideEngineering/encoding_schemes/ST_scores.csv")
+    st_scores = pd.read_csv("/Users/bridget/Desktop/Honours/code stuff/PeptideEngineering/encoding_schemes/ST_scores.csv")
     aa_name_ls = [
         "Arginine", "Alanine", "Asparagine", "Aspartic acid", "Cysteine", 
         "Glutamine", "Glutamic acid", "Glycine", "Histidine", "Isoleucine", 
@@ -42,10 +42,10 @@ def get_st_score_dict():
 
 # T scores dictionary
 def get_t_score_dict():
-    t_scores = pd.read_csv("../encoding_schemes/T-scales.csv")
+    t_scores = pd.read_csv("/Users/bridget/Desktop/Honours/code stuff/PeptideEngineering/encoding_schemes/T-scales.csv")
     aa_name_ls2 = ["Arginine", "Alanine", "Asparagine", "Aspartic-acid", "Cysteine", "Glutamine", "Glutamic-acid", "Glycine", "Histidine", "Isoleucine", "Leucine", "Lysine", "Methionine", "Phenylalanine", "Proline", "Serine", "Threonine", "Tryptophan", "Tyrosine", "Valine", "2,4-Diaminobutyric-acid", "Homoarginine", "Homoserine", "Ornithine", "b-(4,40-Biphenyl)alanine", "40-Benzoylphenylalanine"]
     t_scores_reduced = t_scores[t_scores.Name.isin(aa_name_ls2)]
-    t_scores_arr = t_scores_reduced.to_numpy()[:, -5:].float()
+    t_scores_arr = t_scores_reduced.to_numpy()[:, -5:].astype(float)
     t_score_dict = {name: t_scores_arr[i] for i, name in enumerate(true_aa_name_ls)}
     t_score_dict["-"] = np.zeros((5))
     return t_score_dict
@@ -59,13 +59,20 @@ def get_embedding(seq_ls: list, emb_dict: dict):
     emb_arr = np.stack(emb_arr)
     return emb_arr
 
-
-
+#calling the functions to save each embedding (one at a time)
+raw_sequence_file = np.load("/Users/bridget/Desktop/Honours/code stuff/PeptideEngineering/data/peptide_data/raw_sequences.npy")
+t_score_dict = get_t_score_dict()
+encoded_tokens = get_embedding(raw_sequence_file, t_score_dict)
+output_path = "/Users/bridget/Desktop/Honours/code stuff/PeptideEngineering/data/peptide_encodings/t_score_encoding.npy"
+np.save(output_path, encoded_tokens)
+print("Encoded tokens saved to ", output_path)
 
 
 ### DEBUGGING 
-
+'''
 input_tokens = [["A", "Bpa", "-"], ["A", "N", "-"]]
 st_dict = get_st_score_dict()
 encoded_tokens = get_embedding(input_tokens, st_dict)
-# np.save("./data/hsa1_stscores.npy", encoded_tokens)
+# np.save("./data/hs1a_stscores.npy", encoded_tokens)
+'''
+
